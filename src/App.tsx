@@ -1,25 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
+import {Route, Routes, BrowserRouter} from 'react-router-dom';
+import Post from './components/Post';
+import Profile from './components/Profile';
+import Signin from './components/Signin';
+import Home from './components/Home';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = (): JSX.Element =>{
+  return(
+    <BrowserRouter>
+    
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path="/post" element={<Post />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path = "/Signin" element={<Signin />} />
+      <Route path="*" element={<h2>Page not found</h2>} />
+
+    </Routes>
+    </BrowserRouter>
   );
 }
 
