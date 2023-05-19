@@ -25,6 +25,8 @@ import { DeleteUserArgs } from "./DeleteUserArgs";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { User } from "./User";
+import { PostFindManyArgs } from "../../post/base/PostFindManyArgs";
+import { Post } from "../../post/base/Post";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => User)
@@ -133,5 +135,25 @@ export class UserResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Post], { name: "posts" })
+  @nestAccessControl.UseRoles({
+    resource: "Post",
+    action: "read",
+    possession: "any",
+  })
+  async resolveFieldPosts(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: PostFindManyArgs
+  ): Promise<Post[]> {
+    const results = await this.service.findPosts(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }
